@@ -1,0 +1,21 @@
+{
+  "name": "inhanh-client-sdk",
+  "version": "1.0.0",
+  "description": "INHANH API Client Kit — 2D Vector Dieline, 3D Kinematics Packaging Viewer & N-up Offset Imposition",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "esbuild js/app.js --bundle --outfile=bundle.js"
+  },
+  "keywords": [
+    "packaging",
+    "dieline",
+    "cad",
+    "imposition",
+    "threejs",
+    "inhanh-api"
+  ],
+  "author": "Dao Ma <088284@gmail.com>",
+  "license": "MIT"
+}

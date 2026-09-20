@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INHANH API - Client Kit (2D, 3D, Bình Trang)</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div id="app-root">
+    <!-- Topbar: Thương hiệu, Tab chuyển chế độ & Cấu hình API -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+            </path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">INHANH API</span>
+          <span class="brand-badge">SDK Client</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs: Đặt ngay trung tâm thanh điều hướng -->
+      <nav class="nav-tabs-pill">
+        <button type="button" class="tab-btn active" data-tab="2d">Bản vẽ 2D</button>
+        <button type="button" class="tab-btn" data-tab="3d">Mô hình 3D</button>
+        <button type="button" class="tab-btn" data-tab="imposition">Bình trang</button>
+        <button type="button" class="tab-btn" data-tab="code">Mã tích hợp</button>
+      </nav>
+
+      <!-- Khối trạng thái & Nút mở Cấu hình API -->
+      <div class="header-right">
+        <div class="billing-status">
+          <span id="connection-status" class="status-badge status-loading">Đang kết nối</span>
+          <span id="quota-badge" class="badge badge-quota">Quota: 0</span>
+          <span id="points-badge" class="badge badge-points hidden">Point: 0</span>
+        </div>
+
+        <div class="config-dropdown-wrapper">
+          <button type="button" id="btn-api-config-toggle" class="btn btn-outline btn-sm btn-config"
+            title="Cài đặt kết nối API">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+              </path>
+            </svg>
+            <span>Cấu hình API</span>
+          </button>
+
+          <!-- Popover Cấu hình API -->
+          <div id="api-config-popover" class="api-popover">
+            <div class="popover-header">
+              <h4>Cấu hình kết nối API</h4>
+            </div>
+            <div class="popover-body">
+              <div class="input-group">
+                <label for="api-base-url">Máy chủ API URL</label>
+                <input type="text" id="api-base-url" placeholder="https://inhanh.com" />
+              </div>
+              <div class="input-group">
+                <label for="api-key-input">API Key</label>
+                <div class="input-unit-wrapper">
+                  <input type="password" id="api-key-input" value="ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk"
+                    placeholder="ink_live_..." />
+                  <button type="button" id="btn-toggle-key-visibility" class="btn-toggle-key">Hiện</button>
+                </div>
+              </div>
+              <button type="button" id="btn-save-config" class="btn btn-primary btn-block btn-sm">
+                Lưu và kiểm tra kết nối
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="workspace">
+      <!-- Sidebar bên trái: Thông số & Điều khiển -->
+      <aside class="sidebar">
+        <!-- Panel 1: Chọn mẫu & Kích thước -->
+        <div id="panel-box-params" class="panel-card">
+          <div class="card-header">
+            <div class="card-header-title">
+              <span class="step-num">1</span>
+              <h3>Mẫu bao bì & Kích thước</h3>
+            </div>
+            <span id="compile-spinner" class="spinner-mini hidden" title="Đang tính toán..."></span>
+          </div>
+          <div class="card-body">
+            <div class="input-group">
+              <label for="model-select">Tiêu chuẩn ECMA / FEFCO</label>
+              <select id="model-select" class="form-select">
+                <option value="">Đang tải danh mục mẫu...</option>
+              </select>
+              <p id="model-desc" class="field-hint">Đang tải thông số...</p>
+            </div>
+
+            <!-- Các kích thước động theo mẫu -->
+            <div id="dimension-inputs-container" class="dim-grid"></div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Cấu hình Bình Trang -->
+        <div id="panel-imposition-params" class="panel-card hidden">
+          <div class="card-header">
+            <div class="card-header-title">
+              <span class="step-num">2</span>
+              <h3>Khổ in & Bình bản</h3>
+            </div>
+            <span id="imposition-spinner" class="spinner-mini hidden" title="Đang tính bình bản..."></span>
+          </div>
+          <div class="card-body">
+            <div class="input-group">
+              <label for="sheet-preset-select">Khổ máy in</label>
+              <select id="sheet-preset-select" class="form-select"></select>
+            </div>
+
+            <div class="grid-2col">
+              <div class="input-group">
+                <label for="sheet-width">Rộng</label>
+                <div class="input-unit-wrapper">
+                  <input type="number" id="sheet-width" value="650" min="200" max="2000" />
+                  <span class="unit-suffix">mm</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="sheet-height">Dài</label>
+                <div class="input-unit-wrapper">
+                  <input type="number" id="sheet-height" value="860" min="200" max="2000" />
+                  <span class="unit-suffix">mm</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-2col">
+              <div class="input-group">
+                <label for="gripper-margin">Nhíp</label>
+                <div class="input-unit-wrapper">
+                  <input type="number" id="gripper-margin" value="10" min="5" max="30" />
+                  <span class="unit-suffix">mm</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="gutter-size">Khe hở</label>
+                <div class="input-unit-wrapper">
+                  <input type="number" id="gutter-size" value="5" min="0" max="50" />
+                  <span class="unit-suffix">mm</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="target-quantity">Số lượng thành phẩm</label>
+              <div class="input-unit-wrapper">
+                <input type="number" id="target-quantity" value="1000" min="100" step="500" />
+                <span class="unit-suffix">hộp</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 3: Xuất File Kỹ Thuật -->
+        <div class="panel-card">
+          <div class="card-header">
+            <div class="card-header-title">
+              <span class="step-num">3</span>
+              <h3>Xuất file kỹ thuật</h3>
+            </div>
+          </div>
+          <div class="card-body export-actions">
+            <button type="button" id="btn-download-dxf" class="btn btn-outline btn-sm">AutoCAD DXF</button>
+            <button type="button" id="btn-download-cff2" class="btn btn-outline btn-sm">CFF2 Laser</button>
+            <button type="button" id="btn-download-pdf" class="btn btn-outline btn-sm">PDF Chế bản</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center Stage: Khu vực hiển thị 3 View và Code -->
+      <main class="main-stage">
+
+        <!-- Khung nhìn View 2D -->
+        <section id="view-2d" class="tab-view">
+          <div class="view-toolbar">
+            <div class="toolbar-group">
+              <button type="button" id="btn-zoom-in-2d" class="btn-tool" title="Phóng to">+</button>
+              <button type="button" id="btn-zoom-out-2d" class="btn-tool" title="Thu nhỏ">-</button>
+              <button type="button" id="btn-fit-2d" class="btn-tool">Căn giữa</button>
+              <button type="button" id="btn-download-svg" class="btn-tool">Tải SVG</button>
+            </div>
+            <div class="toolbar-group layers-group">
+              <span class="layers-title">Lớp:</span>
+              <label class="layer-toggle"><input type="checkbox" id="layer-cut" checked /><span
+                  class="dot dot-cut"></span> Nét bế</label>
+              <label class="layer-toggle"><input type="checkbox" id="layer-crease" checked /><span
+                  class="dot dot-crease"></span> Nét cấn</label>
+              <label class="layer-toggle"><input type="checkbox" id="layer-bleed" checked /><span
+                  class="dot dot-bleed"></span> Bù xén</label>
+              <label class="layer-toggle"><input type="checkbox" id="layer-dim" checked /><span
+                  class="dot dot-dim"></span> Kích thước</label>
+            </div>
+          </div>
+          <div id="container-2d" class="canvas-container"></div>
+        </section>
+
+        <!-- Khung nhìn View 3D -->
+        <section id="view-3d" class="tab-view hidden">
+          <div class="view-toolbar toolbar-3d">
+            <div class="toolbar-group fold-control-group">
+              <label for="fold-slider">Gập mở:</label>
+              <input type="range" id="fold-slider" min="0" max="1" step="0.005" value="1.0" class="slider" />
+              <span id="fold-value-label" class="fold-badge">100%</span>
+              <button type="button" id="btn-play-fold" class="btn btn-xs btn-outline">Tự động gập</button>
+            </div>
+            <div class="toolbar-group">
+              <button type="button" id="btn-auto-rotate-3d" class="btn-tool">Tự xoay</button>
+              <button type="button" id="btn-wireframe-3d" class="btn-tool">Khung dây</button>
+              <button type="button" id="btn-reset-cam-3d" class="btn-tool">Đặt lại camera</button>
+              <button type="button" id="btn-screenshot-3d" class="btn-tool">Chụp ảnh</button>
+              <div class="paper-color-picker">
+                <label for="paper-color-select">Chất liệu:</label>
+                <select id="paper-color-select" class="form-select-sm">
+                  <option value="#f4ede4">Kraft</option>
+                  <option value="#ffffff">Couche / Ivory trắng</option>
+                  <option value="#e5e5e5">Duplex xám</option>
+                  <option value="#262626">Mỹ thuật đen</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="container-3d" class="canvas-container"></div>
+        </section>
+
+        <!-- Khung nhìn View Bình Trang -->
+        <section id="view-imposition" class="tab-view hidden">
+          <div class="view-toolbar">
+            <div class="toolbar-group">
+              <button type="button" id="btn-zoom-in-imp" class="btn-tool">+</button>
+              <button type="button" id="btn-zoom-out-imp" class="btn-tool">-</button>
+              <button type="button" id="btn-fit-imp" class="btn-tool">Căn giữa</button>
+              <div class="plan-selector-inline">
+                <label for="imp-plans-select">Phương án:</label>
+                <select id="imp-plans-select" class="form-select-sm"></select>
+              </div>
+            </div>
+
+            <!-- Thống kê kinh tế của phương án đang chọn -->
+            <div class="imposition-stats-strip">
+              <div class="stat-pill"><span class="stat-label">Số con/tờ:</span> <b id="stat-ups">--</b></div>
+              <div class="stat-pill"><span class="stat-label">Hiệu dụng:</span> <b id="stat-util">--%</b></div>
+              <div class="stat-pill"><span class="stat-label">Số tờ in:</span> <b id="stat-sheets">--</b></div>
+              <div class="stat-pill"><span class="stat-label">Lượt in:</span> <b id="stat-impressions">--</b></div>
+            </div>
+          </div>
+          <div id="container-imposition" class="canvas-container"></div>
+        </section>
+
+        <!-- Khung xem Mã tích hợp (Code Snippet) -->
+        <section id="view-code" class="tab-view hidden">
+          <div class="code-view-container">
+            <div class="code-header">
+              <span>Đoạn mã JavaScript gọi API:</span>
+              <button type="button" id="btn-copy-code" class="btn btn-sm btn-primary">Sao chép mã</button>
+            </div>
+            <pre class="code-block"><code id="code-snippet">// Đang tạo mã tích hợp...</code></pre>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="app-toast" class="toast-msg"></div>
+
+  <!-- Main script: bundle.js -->
+  <script src="bundle.js"></script>
+</body>
+
+</html>
