@@ -75,7 +75,7 @@
               <div class="input-group">
                 <label for="api-key-input">API Key</label>
                 <div class="input-unit-wrapper">
-                  <input type="password" id="api-key-input" value="ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk"
+                  <input type="password" id="api-key-input" value=""
                     placeholder="ink_live_..." />
                   <button type="button" id="btn-toggle-key-visibility" class="btn-toggle-key">Hiện</button>
                 </div>
@@ -83,11 +83,57 @@
               <button type="button" id="btn-save-config" class="btn btn-primary btn-block btn-sm">
                 Lưu và kiểm tra kết nối
               </button>
+
+              <!-- Hướng dẫn đăng ký tài khoản & lấy API Key -->
+              <div class="api-key-register-guide">
+                <div class="guide-header">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  <span>Chưa có API Key?</span>
+                </div>
+                <p class="guide-text">
+                  Đăng ký tài khoản miễn phí tại <strong>inhanh.com</strong> để nhận hạn ngạch quota kiểm thử:
+                </p>
+                <div class="guide-links">
+                  <a href="https://inhanh.com/register" target="_blank" rel="noreferrer" class="guide-link-btn primary">
+                    Đăng ký tài khoản
+                  </a>
+                  <a href="https://inhanh.com/keys" target="_blank" rel="noreferrer" class="guide-link-btn">
+                    Lấy API Key
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </header>
+
+    <!-- Banner cảnh báo & hướng dẫn khi chưa có API Key -->
+    <div id="no-key-banner" class="no-key-banner hidden">
+      <div class="banner-inner">
+        <div class="banner-info">
+          <span class="banner-badge">Chưa có API Key</span>
+          <span class="banner-msg">
+            Để biên dịch 2D/3D và tính toán bình trang, bạn cần có API Key. Đăng ký tài khoản miễn phí tại <strong>inhanh.com</strong> để nhận hạn ngạch quota:
+          </span>
+        </div>
+        <div class="banner-actions">
+          <a href="https://inhanh.com/register" target="_blank" rel="noreferrer" class="btn btn-sm btn-primary">
+            Đăng ký tài khoản
+          </a>
+          <a href="https://inhanh.com/keys" target="_blank" rel="noreferrer" class="btn btn-sm btn-secondary">
+            Lấy API Key
+          </a>
+          <button type="button" id="btn-banner-open-config" class="btn btn-sm btn-outline">
+            Nhập Key
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- Main Workspace -->
     <div class="workspace">

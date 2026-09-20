@@ -29,7 +29,7 @@ class App {
     const isLocalServer = typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http') && window.location.host.includes('localhost:8080');
     const defaultUrl = isLocalServer ? window.location.origin : 'https://inhanh.com';
     const savedUrl = localStorage.getItem('inhanh_base_url') || defaultUrl;
-    const savedKey = localStorage.getItem('inhanh_api_key') || 'ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk';
+    const savedKey = localStorage.getItem('inhanh_api_key') || '';
 
     this.client = new InhanhClient({ baseUrl: savedUrl, apiKey: savedKey });
 
@@ -79,6 +79,8 @@ class App {
       connectionStatus: document.getElementById('connection-status'),
       quotaBadge: document.getElementById('quota-badge'),
       pointsBadge: document.getElementById('points-badge'),
+      noKeyBanner: document.getElementById('no-key-banner'),
+      btnBannerOpenConfig: document.getElementById('btn-banner-open-config'),
 
       // Model & Parameters
       modelSelect: document.getElementById('model-select'),
@@ -202,9 +204,22 @@ class App {
       if (this.dom.apiConfigPopover) {
         this.dom.apiConfigPopover.classList.remove('show');
       }
+      if (key) {
+        this.dom.noKeyBanner?.classList.add('hidden');
+      } else {
+        this.dom.noKeyBanner?.classList.remove('hidden');
+      }
       this._showToast('Đã lưu cấu hình API Key!');
       this._loadInitialData();
     });
+
+    if (this.dom.btnBannerOpenConfig && this.dom.apiConfigPopover) {
+      this.dom.btnBannerOpenConfig.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.dom.apiConfigPopover.classList.add('show');
+        this.dom.apiKeyInput?.focus();
+      });
+    }
 
     this.dom.toggleKeyVisibilityBtn.addEventListener('click', () => {
       const isPass = this.dom.apiKeyInput.type === 'password';
@@ -363,13 +378,22 @@ class App {
    * @private
    */
   async _loadInitialData() {
-    this.dom.connectionStatus.textContent = 'Đang kiểm tra kết nối...';
-    this.dom.connectionStatus.className = 'status-badge status-loading';
+    if (!this.client.apiKey) {
+      this.dom.noKeyBanner?.classList.remove('hidden');
+      this.dom.connectionStatus.textContent = 'Chưa có API Key';
+      this.dom.connectionStatus.className = 'status-badge status-offline';
+    } else {
+      this.dom.noKeyBanner?.classList.add('hidden');
+      this.dom.connectionStatus.textContent = 'Đang kiểm tra kết nối...';
+      this.dom.connectionStatus.className = 'status-badge status-loading';
+    }
 
     try {
       this.specsList = await this.client.getSpecs();
-      this.dom.connectionStatus.textContent = 'Đã kết nối API';
-      this.dom.connectionStatus.className = 'status-badge status-online';
+      if (this.client.apiKey) {
+        this.dom.connectionStatus.textContent = 'Đã kết nối API';
+        this.dom.connectionStatus.className = 'status-badge status-online';
+      }
 
       this._populateModelDropdown();
 
@@ -378,8 +402,10 @@ class App {
       if (defaultId) {
         this.dom.modelSelect.value = defaultId;
         this._onModelChanged(defaultId);
-        // Tự động biên dịch lần đầu
-        await this.compileCurrentModel();
+        // Tự động biên dịch lần đầu nếu đã có API Key
+        if (this.client.apiKey) {
+          await this.compileCurrentModel();
+        }
       }
     } catch (err) {
       this.dom.connectionStatus.textContent = 'Mất kết nối hoặc sai Key';
@@ -522,6 +548,12 @@ class App {
    */
   async compileCurrentModel() {
     if (!this.selectedSpec) return;
+
+    if (!this.client.apiKey) {
+      this.dom.noKeyBanner?.classList.remove('hidden');
+      this._showToast('Chưa có API Key. Đăng ký tại inhanh.com để nhận quota kiểm thử!', 'error');
+      return;
+    }
 
     const modelId = this.selectedSpec.id;
     const dimensions = this._collectCurrentDimensions();
@@ -737,7 +769,7 @@ class App {
     const modelId = this.selectedSpec.id;
     const dims = this._collectCurrentDimensions();
     const baseUrl = this.client.baseUrl;
-    const key = this.client.apiKey || 'ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk';
+    const key = this.client.apiKey || 'YOUR_API_KEY';
 
     const snippet = `// 1. Gọi biên dịch khuôn bế 2D & mô hình 3D
 const response = await fetch('${baseUrl}/v1/engine/compile?iso=1', {

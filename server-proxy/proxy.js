@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3001;
 
 // CẤU HÌNH BẢO MẬT PHÍA BACKEND
 const INHANH_API_URL = process.env.INHANH_API_URL || 'https://inhanh.com';
-const INHANH_API_KEY = process.env.INHANH_API_KEY || 'ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk';
+const INHANH_API_KEY = process.env.INHANH_API_KEY || '';
 
 app.use(cors());
 app.use(express.json());

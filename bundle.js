@@ -1,12 +1,12 @@
 (() => {
-  // examples/client-sdk/js/inhanh-api.js
+  // js/inhanh-api.js
   var InhanhClient = class {
     /**
      * @param {Object} options
      * @param {string} [options.baseUrl='https://inhanh.com'] - Base URL của INHANH API
-     * @param {string} [options.apiKey='ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk'] - API Key (ink_live_...)
+     * @param {string} [options.apiKey=''] - API Key (ink_live_...)
      */
-    constructor({ baseUrl = "https://inhanh.com", apiKey = "ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk" } = {}) {
+    constructor({ baseUrl = "https://inhanh.com", apiKey = "" } = {}) {
       this.baseUrl = baseUrl.replace(/\/+$/, "");
       this.apiKey = apiKey.trim();
       this.lastBillingInfo = {
@@ -204,7 +204,7 @@
     }
   };
 
-  // examples/client-sdk/js/viewer-2d.js
+  // js/viewer-2d.js
   var Viewer2D = class {
     /**
      * @param {HTMLElement} container - Phần tử DOM chứa viewer
@@ -473,7 +473,7 @@
     }
   };
 
-  // frontend/node_modules/three/build/three.core.js
+  // ../../frontend/node_modules/three/build/three.core.js
   var REVISION = "186";
   var MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2, ROTATE: 0, DOLLY: 1, PAN: 2 };
   var TOUCH = { ROTATE: 0, PAN: 1, DOLLY_PAN: 2, DOLLY_ROTATE: 3 };
@@ -19223,7 +19223,7 @@
     }
   }
 
-  // frontend/node_modules/three/build/three.module.js
+  // ../../frontend/node_modules/three/build/three.module.js
   function WebGLAnimation() {
     let context = null;
     let isAnimating = false;
@@ -30721,7 +30721,7 @@ void main() {
     }
   };
 
-  // frontend/node_modules/three/examples/jsm/controls/OrbitControls.js
+  // ../../frontend/node_modules/three/examples/jsm/controls/OrbitControls.js
   var _changeEvent = { type: "change" };
   var _startEvent = { type: "start" };
   var _endEvent = { type: "end" };
@@ -31637,7 +31637,7 @@ void main() {
     }
   }
 
-  // examples/client-sdk/js/viewer-3d.js
+  // js/viewer-3d.js
   var MM = 1e-3;
   var smooth = (t) => {
     const c = Math.max(0, Math.min(1, t));
@@ -32110,7 +32110,7 @@ void main() {
     }
   };
 
-  // examples/client-sdk/js/viewer-imposition.js
+  // js/viewer-imposition.js
   var ViewerImposition = class {
     /**
      * @param {HTMLElement} container - Phần tử DOM chứa viewer
@@ -32457,7 +32457,7 @@ void main() {
     }
   };
 
-  // examples/client-sdk/js/app.js
+  // js/app.js
   var SHEET_PRESETS = [
     { id: "65x86", name: "Kh\u1ED5 m\xE1y 650 \xD7 860 mm", w: 650, h: 860 },
     { id: "79x109", name: "Kh\u1ED5 m\xE1y 790 \xD7 1090 mm", w: 790, h: 1090 },
@@ -32471,7 +32471,7 @@ void main() {
       const isLocalServer = typeof window !== "undefined" && window.location && window.location.protocol.startsWith("http") && window.location.host.includes("localhost:8080");
       const defaultUrl = isLocalServer ? window.location.origin : "https://inhanh.com";
       const savedUrl = localStorage.getItem("inhanh_base_url") || defaultUrl;
-      const savedKey = localStorage.getItem("inhanh_api_key") || "ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk";
+      const savedKey = localStorage.getItem("inhanh_api_key") || "";
       this.client = new InhanhClient({ baseUrl: savedUrl, apiKey: savedKey });
       this.specsList = [];
       this.selectedSpec = null;
@@ -32514,6 +32514,8 @@ void main() {
         connectionStatus: document.getElementById("connection-status"),
         quotaBadge: document.getElementById("quota-badge"),
         pointsBadge: document.getElementById("points-badge"),
+        noKeyBanner: document.getElementById("no-key-banner"),
+        btnBannerOpenConfig: document.getElementById("btn-banner-open-config"),
         // Model & Parameters
         modelSelect: document.getElementById("model-select"),
         modelDescription: document.getElementById("model-desc"),
@@ -32618,9 +32620,21 @@ void main() {
         if (this.dom.apiConfigPopover) {
           this.dom.apiConfigPopover.classList.remove("show");
         }
+        if (key) {
+          this.dom.noKeyBanner?.classList.add("hidden");
+        } else {
+          this.dom.noKeyBanner?.classList.remove("hidden");
+        }
         this._showToast("\u0110\xE3 l\u01B0u c\u1EA5u h\xECnh API Key!");
         this._loadInitialData();
       });
+      if (this.dom.btnBannerOpenConfig && this.dom.apiConfigPopover) {
+        this.dom.btnBannerOpenConfig.addEventListener("click", (e) => {
+          e.stopPropagation();
+          this.dom.apiConfigPopover.classList.add("show");
+          this.dom.apiKeyInput?.focus();
+        });
+      }
       this.dom.toggleKeyVisibilityBtn.addEventListener("click", () => {
         const isPass = this.dom.apiKeyInput.type === "password";
         this.dom.apiKeyInput.type = isPass ? "text" : "password";
@@ -32748,18 +32762,29 @@ void main() {
      * @private
      */
     async _loadInitialData() {
-      this.dom.connectionStatus.textContent = "\u0110ang ki\u1EC3m tra k\u1EBFt n\u1ED1i...";
-      this.dom.connectionStatus.className = "status-badge status-loading";
+      if (!this.client.apiKey) {
+        this.dom.noKeyBanner?.classList.remove("hidden");
+        this.dom.connectionStatus.textContent = "Ch\u01B0a c\xF3 API Key";
+        this.dom.connectionStatus.className = "status-badge status-offline";
+      } else {
+        this.dom.noKeyBanner?.classList.add("hidden");
+        this.dom.connectionStatus.textContent = "\u0110ang ki\u1EC3m tra k\u1EBFt n\u1ED1i...";
+        this.dom.connectionStatus.className = "status-badge status-loading";
+      }
       try {
         this.specsList = await this.client.getSpecs();
-        this.dom.connectionStatus.textContent = "\u0110\xE3 k\u1EBFt n\u1ED1i API";
-        this.dom.connectionStatus.className = "status-badge status-online";
+        if (this.client.apiKey) {
+          this.dom.connectionStatus.textContent = "\u0110\xE3 k\u1EBFt n\u1ED1i API";
+          this.dom.connectionStatus.className = "status-badge status-online";
+        }
         this._populateModelDropdown();
         const defaultId = this.specsList.some((s) => s.id === "ECMA_A30") ? "ECMA_A30" : this.specsList[0]?.id;
         if (defaultId) {
           this.dom.modelSelect.value = defaultId;
           this._onModelChanged(defaultId);
-          await this.compileCurrentModel();
+          if (this.client.apiKey) {
+            await this.compileCurrentModel();
+          }
         }
       } catch (err) {
         this.dom.connectionStatus.textContent = "M\u1EA5t k\u1EBFt n\u1ED1i ho\u1EB7c sai Key";
@@ -32883,6 +32908,11 @@ void main() {
      */
     async compileCurrentModel() {
       if (!this.selectedSpec) return;
+      if (!this.client.apiKey) {
+        this.dom.noKeyBanner?.classList.remove("hidden");
+        this._showToast("Ch\u01B0a c\xF3 API Key. \u0110\u0103ng k\xFD t\u1EA1i inhanh.com \u0111\u1EC3 nh\u1EADn quota ki\u1EC3m th\u1EED!", "error");
+        return;
+      }
       const modelId = this.selectedSpec.id;
       const dimensions = this._collectCurrentDimensions();
       if (!dimensions) return;
@@ -33061,7 +33091,7 @@ void main() {
       const modelId = this.selectedSpec.id;
       const dims = this._collectCurrentDimensions();
       const baseUrl = this.client.baseUrl;
-      const key = this.client.apiKey || "ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk";
+      const key = this.client.apiKey || "YOUR_API_KEY";
       const snippet = `// 1. G\u1ECDi bi\xEAn d\u1ECBch khu\xF4n b\u1EBF 2D & m\xF4 h\xECnh 3D
 const response = await fetch('${baseUrl}/v1/engine/compile?iso=1', {
   method: 'POST',

@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // CẤU HÌNH BẢO MẬT PHÍA SERVER PHP
 $INHANH_API_URL = getenv('INHANH_API_URL') ?: 'https://inhanh.com';
-$INHANH_API_KEY = getenv('INHANH_API_KEY') ?: 'ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk';
+$INHANH_API_KEY = getenv('INHANH_API_KEY') ?: '';
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'specs';
 $targetUrl = '';

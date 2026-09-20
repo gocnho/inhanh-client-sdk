@@ -40,7 +40,21 @@ Hệ thống tự động kết nối API, tự động biên dịch và tính t
 
 ---
 
-## 2. Cấu Trúc Thư Mục
+## 2. Hướng Dẫn Đăng Ký Tài Khoản & Lấy API Key Tại INHANH.COM
+
+Để sử dụng SDK kết nối và khai thác toàn bộ sức mạnh của INHANH API Engine, bạn cần có API Key từ hệ thống:
+
+1. **Đăng ký tài khoản**: Truy cập [https://inhanh.com/register](https://inhanh.com/register) để tạo tài khoản lập trình viên miễn phí hoặc đăng nhập nhanh bằng Google.
+2. **Kích hoạt hạn ngạch dùng thử**: Tài khoản mới được cấp sẵn hạn ngạch quota miễn phí để kiểm thử ngay lập tức các API 2D Dieline, 3D Kinematics và Bình trang N-up.
+3. **Tạo API Key mới**:
+   - Sau khi đăng nhập, truy cập trang **Quản lý API Key** tại [https://inhanh.com/keys](https://inhanh.com/keys).
+   - Nhấn nút **"Tạo khóa mới"** (Create Key).
+   - Nhập tên gợi nhớ (ví dụ: `My Packaging Storefront` hoặc `Dev Test`) và bấm xác nhận tạo.
+4. **Lưu trữ bí mật**: Sao chép chuỗi mã khóa bí mật `ink_live_...` được cấp. Đưa vào biến môi trường `INHANH_API_KEY` hoặc dán vào ô cấu hình trong bản demo `index.html`.
+
+---
+
+## 3. Cấu Trúc Thư Mục
 
 ```
 examples/client-sdk/
@@ -59,9 +73,9 @@ examples/client-sdk/
 
 ---
 
-## 3. Hướng Dẫn Tích Hợp Vào Dự Án Của Bạn
+## 4. Hướng Dẫn Tích Hợp Vào Dự Án Của Bạn
 
-### 3.1 Nhúng thư viện SDK (`inhanh-api.js`)
+### 4.1 Nhúng thư viện SDK (`inhanh-api.js`)
 
 ```javascript
 import { InhanhClient } from './js/inhanh-api.js';
@@ -69,7 +83,7 @@ import { InhanhClient } from './js/inhanh-api.js';
 // Khởi tạo client với API Key
 const client = new InhanhClient({
   baseUrl: 'https://inhanh.com',
-  apiKey: 'ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk'
+  apiKey: 'YOUR_API_KEY'
 });
 
 // 1. Lấy danh mục mẫu bao bì (Miễn phí - 0 Quota)
@@ -105,7 +119,7 @@ console.log('Phương án bình trang tối ưu:', plans[0]);
 
 ---
 
-### 3.2 Nhúng Trình Hiển Thị 2D (`viewer-2d.js`)
+### 4.2 Nhúng Trình Hiển Thị 2D Dieline (`viewer-2d.js`)
 
 ```html
 <div id="dieline-container" style="width: 100%; height: 500px; position: relative;"></div>
@@ -131,7 +145,7 @@ console.log('Phương án bình trang tối ưu:', plans[0]);
 
 ---
 
-### 3.3 Nhúng Trình Mô Phỏng 3D (`viewer-3d.js`)
+### 4.3 Nhúng Trình Mô Phỏng 3D Fold (`viewer-3d.js`)
 
 Khai báo import map Three.js trong thẻ `<head>`:
 ```html
@@ -171,7 +185,7 @@ Khởi tạo canvas 3D:
 
 ---
 
-### 3.4 Nhúng Sơ Đồ Bình Trang (`viewer-imposition.js`)
+### 4.4 Nhúng Sơ Đồ Bình Trang (`viewer-imposition.js`)
 
 ```html
 <div id="imposition-container" style="width: 100%; height: 500px; position: relative;"></div>
@@ -194,7 +208,7 @@ Khởi tạo canvas 3D:
 
 ---
 
-## 4. Bảo Mật API Key Trên Môi Trường Production
+## 5. Bảo Mật API Key Trên Môi Trường Production
 
 > [!WARNING]
 > Nếu bạn xây dựng website công khai (public ecommerce, trang đặt in mở cho khách hàng vào xem), **tuyệt đối không để lộ `ink_live_...` trực tiếp trong mã nguồn JavaScript phía trình duyệt**.

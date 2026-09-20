@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "build": "esbuild js/app.js --bundle --outfile=bundle.js"
+    "build": "node build.js"
   },
   "keywords": [
     "packaging",

@@ -14,7 +14,7 @@ const path = require('path');
 
 const PORT = 8080;
 const UPSTREAM_HOST = 'inhanh.com';
-const API_KEY = process.env.INHANH_API_KEY || 'ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk';
+const API_KEY = process.env.INHANH_API_KEY || '';
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',

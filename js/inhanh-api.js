@@ -9,9 +9,9 @@ export class InhanhClient {
   /**
    * @param {Object} options
    * @param {string} [options.baseUrl='https://inhanh.com'] - Base URL của INHANH API
-   * @param {string} [options.apiKey='ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk'] - API Key (ink_live_...)
+   * @param {string} [options.apiKey=''] - API Key (ink_live_...)
    */
-  constructor({ baseUrl = 'https://inhanh.com', apiKey = 'ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk' } = {}) {
+  constructor({ baseUrl = 'https://inhanh.com', apiKey = '' } = {}) {
     this.baseUrl = baseUrl.replace(/\/+$/, '');
     this.apiKey = apiKey.trim();
     this.lastBillingInfo = {
