@@ -191,10 +191,10 @@ export class Viewer2D {
     
     // Thêm các class tiện ích nếu chưa có
     const customCss = `
-      .cut, [stroke="#e11d48"], [stroke="#ff0000"], [class*="cut"] { stroke-dasharray: none !important; }
-      .crease, [stroke="#2563eb"], [stroke="#0000ff"], [class*="crease"] { stroke-dasharray: 4 3 !important; }
-      .bleed, [stroke="#10b981"], [class*="bleed"] { stroke-dasharray: 2 2 !important; opacity: 0.6; }
-      .dimension, .ruler, [class*="dim"], [class*="annotation"] { font-size: 10px; }
+      #container-2d .cut, #container-2d [stroke="#e11d48"], #container-2d [stroke="#ff0000"], #container-2d [class*="cut"] { stroke-dasharray: none !important; }
+      #container-2d .crease, #container-2d [stroke="#2563eb"], #container-2d [stroke="#0000ff"], #container-2d [class*="crease"] { stroke-dasharray: 4 3 !important; }
+      #container-2d .bleed, #container-2d [stroke="#10b981"], #container-2d [class*="bleed"] { stroke-dasharray: 2 2 !important; opacity: 0.6; }
+      #container-2d .dimension, #container-2d .ruler, #container-2d [class*="dim"], #container-2d [class*="annotation"] { font-size: 10px; }
     `;
     styleTag.textContent += customCss;
 
@@ -303,7 +303,7 @@ export class Viewer2D {
     setVisibility('.cut, [stroke="#e11d48"], [stroke="#ff0000"], [id*="cut"], [class*="cut"]', this.layers.cut);
     setVisibility('.crease, [stroke="#2563eb"], [stroke="#0000ff"], [id*="crease"], [class*="crease"]', this.layers.crease);
     setVisibility('.bleed, [stroke="#10b981"], [id*="bleed"], [class*="bleed"]', this.layers.bleed);
-    setVisibility('.dimension, .ruler, [id*="dimension"], [class*="dimension"], [id*="callout"], text', this.layers.dimensions);
+    setVisibility('#layer-dimensions, .dimension, .ruler, [id*="dimension"], [class*="dimension"], [id*="callout"], text', this.layers.dimensions);
   }
 
   /**

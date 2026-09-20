@@ -168,27 +168,26 @@ export class ViewerImposition {
 
     // Chuẩn bị nội dung SVG dieline để tái sử dụng
     let cleanDielineInner = '';
-    let dielineStyles = '';
     let dielineVb = '';
 
     if (dielineSvg) {
-      // 1. Trích xuất <style> nếu có để đưa vào <defs>
-      const styleMatch = dielineSvg.match(/<style>([\s\S]*?)<\/style>/i);
-      if (styleMatch) {
-        dielineStyles = styleMatch[1];
-      }
+      try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(dielineSvg, 'image/svg+xml');
 
-      // 2. Làm sạch nội dung dieline:
-      // - Loại bỏ khai báo XML và thẻ <style>
-      // - QUAN TRỌNG: Loại bỏ hoàn toàn lớp kích thước/thước đo CAD (layer-dimensions)
-      // - Loại bỏ thẻ <svg> bao ngoài và </svg>
-      cleanDielineInner = dielineSvg
-        .replace(/<\?xml[^>]*\?>/gi, '')
-        .replace(/<style>[\s\S]*?<\/style>/gi, '')
-        .replace(/<g[^>]*id=["']layer-dimensions["'][^>]*>[\s\S]*?<\/g>/gi, '')
-        .replace(/<g[^>]*class=["'][^"']*dimensions[^"']*["'][^>]*>[\s\S]*?<\/g>/gi, '')
-        .replace(/<svg[^>]*>/i, '')
-        .replace(/<\/svg>\s*$/i, '');
+        // 1. Loại bỏ triệt để mọi thẻ <style> bên trong dieline để không xung đột CSS toàn cục
+        doc.querySelectorAll('style').forEach(s => s.remove());
+
+        // 2. QUAN TRỌNG: Loại bỏ hoàn toàn lớp kích thước/thước đo CAD (layer-dimensions) và các annotation
+        doc.querySelectorAll('#layer-dimensions, [id*="dimension"], .dimensions, .dimension, [id*="callout"], .ruler').forEach(el => el.remove());
+
+        const svgEl = doc.querySelector('svg');
+        if (svgEl) {
+          cleanDielineInner = svgEl.innerHTML || '';
+        }
+      } catch (err) {
+        console.warn('DOMParser failed in viewer-imposition:', err);
+      }
 
       // 3. ViewBox CHUẨN: Bắt buộc lấy chính xác theo bounds thực tế của khuôn bế (dieBounds)
       // Không dùng viewBox có padding thước đo của iso_svg
@@ -245,12 +244,10 @@ export class ViewerImposition {
             <line x1="0" y1="0" x2="0" y2="8" stroke="#a1a1aa" stroke-width="1" opacity="0.25" />
           </pattern>
           <style>
-            .cut, #layer-cut path, [data-layer="cut"] { stroke: #dc2626; stroke-width: 0.25; fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
-            .crease, #layer-crease path, [data-layer="crease"] { stroke: #2563eb; stroke-width: 0.20; stroke-dasharray: 3.5 2; fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
-            .bleed, #layer-bleed path { stroke: #059669; stroke-width: 0.20; fill: none; opacity: 0.6; }
-            .faces, #layer-substrate path { fill: #ffffff; stroke: none; }
-            #layer-dimensions, .layer-dimensions { display: none !important; }
-            ${dielineStyles}
+            #imposition-press-sheet .cut, #imposition-press-sheet #layer-cut path, #imposition-press-sheet [data-layer="cut"] { stroke: #dc2626; stroke-width: 0.25; fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
+            #imposition-press-sheet .crease, #imposition-press-sheet #layer-crease path, #imposition-press-sheet [data-layer="crease"] { stroke: #2563eb; stroke-width: 0.20; stroke-dasharray: 3.5 2; fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
+            #imposition-press-sheet .bleed, #imposition-press-sheet #layer-bleed path { stroke: #059669; stroke-width: 0.20; fill: none; opacity: 0.6; }
+            #imposition-press-sheet .faces, #imposition-press-sheet #layer-substrate path { fill: #ffffff; stroke: none; }
           </style>
         </defs>
 

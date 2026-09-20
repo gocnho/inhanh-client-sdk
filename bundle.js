@@ -353,10 +353,10 @@
         rootSvg.prepend(styleTag);
       }
       const customCss = `
-      .cut, [stroke="#e11d48"], [stroke="#ff0000"], [class*="cut"] { stroke-dasharray: none !important; }
-      .crease, [stroke="#2563eb"], [stroke="#0000ff"], [class*="crease"] { stroke-dasharray: 4 3 !important; }
-      .bleed, [stroke="#10b981"], [class*="bleed"] { stroke-dasharray: 2 2 !important; opacity: 0.6; }
-      .dimension, .ruler, [class*="dim"], [class*="annotation"] { font-size: 10px; }
+      #container-2d .cut, #container-2d [stroke="#e11d48"], #container-2d [stroke="#ff0000"], #container-2d [class*="cut"] { stroke-dasharray: none !important; }
+      #container-2d .crease, #container-2d [stroke="#2563eb"], #container-2d [stroke="#0000ff"], #container-2d [class*="crease"] { stroke-dasharray: 4 3 !important; }
+      #container-2d .bleed, #container-2d [stroke="#10b981"], #container-2d [class*="bleed"] { stroke-dasharray: 2 2 !important; opacity: 0.6; }
+      #container-2d .dimension, #container-2d .ruler, #container-2d [class*="dim"], #container-2d [class*="annotation"] { font-size: 10px; }
     `;
       styleTag.textContent += customCss;
       this.stage.innerHTML = "";
@@ -444,7 +444,7 @@
       setVisibility('.cut, [stroke="#e11d48"], [stroke="#ff0000"], [id*="cut"], [class*="cut"]', this.layers.cut);
       setVisibility('.crease, [stroke="#2563eb"], [stroke="#0000ff"], [id*="crease"], [class*="crease"]', this.layers.crease);
       setVisibility('.bleed, [stroke="#10b981"], [id*="bleed"], [class*="bleed"]', this.layers.bleed);
-      setVisibility('.dimension, .ruler, [id*="dimension"], [class*="dimension"], [id*="callout"], text', this.layers.dimensions);
+      setVisibility('#layer-dimensions, .dimension, .ruler, [id*="dimension"], [class*="dimension"], [id*="callout"], text', this.layers.dimensions);
     }
     /**
      * Tải về file SVG cục bộ
@@ -32243,14 +32243,20 @@ void main() {
       const dieW = (dieBounds ? Math.round(dieBounds.max_x - dieBounds.min_x) : null) || plan.die?.width_mm || 300;
       const dieH = (dieBounds ? Math.round(dieBounds.max_y - dieBounds.min_y) : null) || plan.die?.height_mm || 200;
       let cleanDielineInner = "";
-      let dielineStyles = "";
       let dielineVb = "";
       if (dielineSvg) {
-        const styleMatch = dielineSvg.match(/<style>([\s\S]*?)<\/style>/i);
-        if (styleMatch) {
-          dielineStyles = styleMatch[1];
+        try {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(dielineSvg, "image/svg+xml");
+          doc.querySelectorAll("style").forEach((s) => s.remove());
+          doc.querySelectorAll('#layer-dimensions, [id*="dimension"], .dimensions, .dimension, [id*="callout"], .ruler').forEach((el) => el.remove());
+          const svgEl = doc.querySelector("svg");
+          if (svgEl) {
+            cleanDielineInner = svgEl.innerHTML || "";
+          }
+        } catch (err) {
+          console.warn("DOMParser failed in viewer-imposition:", err);
         }
-        cleanDielineInner = dielineSvg.replace(/<\?xml[^>]*\?>/gi, "").replace(/<style>[\s\S]*?<\/style>/gi, "").replace(/<g[^>]*id=["']layer-dimensions["'][^>]*>[\s\S]*?<\/g>/gi, "").replace(/<g[^>]*class=["'][^"']*dimensions[^"']*["'][^>]*>[\s\S]*?<\/g>/gi, "").replace(/<svg[^>]*>/i, "").replace(/<\/svg>\s*$/i, "");
         if (dieBounds) {
           const bx = dieBounds.min_x ?? 0;
           const by = dieBounds.min_y ?? 0;
@@ -32295,12 +32301,10 @@ void main() {
             <line x1="0" y1="0" x2="0" y2="8" stroke="#a1a1aa" stroke-width="1" opacity="0.25" />
           </pattern>
           <style>
-            .cut, #layer-cut path, [data-layer="cut"] { stroke: #dc2626; stroke-width: 0.25; fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
-            .crease, #layer-crease path, [data-layer="crease"] { stroke: #2563eb; stroke-width: 0.20; stroke-dasharray: 3.5 2; fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
-            .bleed, #layer-bleed path { stroke: #059669; stroke-width: 0.20; fill: none; opacity: 0.6; }
-            .faces, #layer-substrate path { fill: #ffffff; stroke: none; }
-            #layer-dimensions, .layer-dimensions { display: none !important; }
-            ${dielineStyles}
+            #imposition-press-sheet .cut, #imposition-press-sheet #layer-cut path, #imposition-press-sheet [data-layer="cut"] { stroke: #dc2626; stroke-width: 0.25; fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
+            #imposition-press-sheet .crease, #imposition-press-sheet #layer-crease path, #imposition-press-sheet [data-layer="crease"] { stroke: #2563eb; stroke-width: 0.20; stroke-dasharray: 3.5 2; fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
+            #imposition-press-sheet .bleed, #imposition-press-sheet #layer-bleed path { stroke: #059669; stroke-width: 0.20; fill: none; opacity: 0.6; }
+            #imposition-press-sheet .faces, #imposition-press-sheet #layer-substrate path { fill: #ffffff; stroke: none; }
           </style>
         </defs>
 
