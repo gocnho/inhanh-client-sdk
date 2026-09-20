@@ -16,6 +16,11 @@
     "threejs",
     "inhanh-api"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gocnho/inhanh-client-sdk.git"
+  },
+  "homepage": "https://github.com/gocnho/inhanh-client-sdk#readme",
   "author": "Dao Ma <088284@gmail.com>",
   "license": "MIT"
 }

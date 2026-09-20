@@ -1,13 +1,25 @@
 # Hướng Dẫn Tích Hợp INHANH API Cho Client (HTML, JS, CSS)
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-inhanh--client--sdk-blue?logo=github)](https://github.com/gocnho/inhanh-client-sdk)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
+> **Kho lưu trữ mẫu (Example Repository):**  
+> 🔗 [https://github.com/gocnho/inhanh-client-sdk](https://github.com/gocnho/inhanh-client-sdk)
+
 Bộ mã nguồn mẫu **INHANH API Client Kit** cung cấp trọn gói giải pháp cho đối tác, nhà in, sàn thương mại điện tử hoặc ứng dụng web của khách hàng có thể gọi trực tiếp **INHANH API** thông qua **API Key (`ink_live_...`)** để hiển thị:
-1. **Bản vẽ 2D (Dieline Vector)**: Render SVG sắc nét, hỗ trợ phóng to/thu nhỏ, di chuyển (Pan/Zoom) và bật/tắt các lớp nét bế (`cut`), nét cấn (`crease`), bù xén (`bleed`), thước đo (`dimensions`).
+1. **Bản vẽ 2D (Dieline Vector)**: Render SVG sắc nét, hỗ trợ phóng to/thu nhỏ, di chuyển (Pan/Zoom), thước đo kích thước kỹ thuật ISO 19593-1 và bật/tắt các lớp nét bế (`cut`), nét cấn (`crease`), bù xén (`bleed`), thước đo (`dimensions`).
 2. **Mô hình 3D (Packaging Kinematics)**: Dựng hình 3D chuẩn công nghiệp bằng Three.js (WebGL), tự động tạo bản lề gập mở theo chuyển động thực tế (Kinematics Tree) với thanh trượt gập $0\% \to 100\%$, xoay 360°, đổi màu giấy.
 3. **Sơ đồ Bình Trang (Imposition N-up)**: Xếp phôi tự động trên khổ in máy, hiển thị dải nhíp in (gripper), lề an toàn, lồng trực tiếp khuôn bế vào phôi và tính toán kinh tế (số con/tờ, % hiệu dụng giấy, số ram giấy).
 
 ---
 
 ## 1. Khởi Động Nhanh (Quickstart)
+
+```bash
+# Clone kho lưu trữ ví dụ
+git clone https://github.com/gocnho/inhanh-client-sdk.git
+cd inhanh-client-sdk
+```
 
 ### Cách 1: Click đúp chạy ngay `start.bat` (Khuyến nghị trên Windows)
 - Chỉ cần click đúp vào file [`start.bat`](start.bat), máy chủ web cục bộ sẽ tự khởi động và tự động mở trình duyệt tại `http://localhost:8080`.
@@ -16,14 +28,15 @@ Bộ mã nguồn mẫu **INHANH API Client Kit** cung cấp trọn gói giải p
 - Bạn có thể click đúp mở trực tiếp file [`index.html`](index.html) bằng bất kỳ trình duyệt nào (Chrome, Edge, Firefox).
 - File đã được tích hợp sẵn `bundle.js` tự thân nên **không bị lỗi CORS `file:///`**.
 
-### Cách 3: Chạy qua Python hoặc Node.js
+### Cách 3: Chạy qua Node.js hoặc Python
 ```bash
-cd examples/client-sdk
-python -m http.server 8080
-# Hoặc: npx serve -p 8080
+# Chạy dev server kèm CORS Proxy tích hợp:
+npm start
+# Hoặc: node server.js
+# Hoặc: python -m http.server 8080
 ```
-Sau đó truy cập `http://localhost:8080` trên trình duyệt.
-API Key mặc định `ink_live_5u6kug93r8e7kitzwdkol9grfslx32fk` đã được điền sẵn, bạn chỉ cần bấm **Biên dịch 2D & 3D** để trải nghiệm ngay.
+Sau đó truy cập `http://localhost:8080` trên trình duyệt.  
+Hệ thống tự động kết nối API, tự động biên dịch và tính toán khi bạn thay đổi thông số.
 
 ---
 
